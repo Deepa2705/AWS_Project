@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User portal</title>
+    <link rel="icon" href="/icon.jpg">
+    <script>
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+    
+        // Push a new state to the history stack
+        history.pushState(null, null, location.href);
+    
+        window.addEventListener('popstate', function(event) {
+            // Redirect to the logout endpoint or any other desired page
+            window.location.href = '/user/logout';
+        });
+    
+        // Optional: Prevent default action for backspace key to avoid navigating back
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Backspace' && event.target.nodeName !== 'INPUT' && event.target.nodeName !== 'TEXTAREA') {
+                event.preventDefault();
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b8e7f9;
+        }
+        .main {
+            margin: auto;
+            padding: 10px;
+            background-color: #ececec;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(11, 1, 1, 0.2);
+            padding: 2%;
+            width: 40%;
+        }
+        .main h2{
+            color: #3f65c7;
+            margin-bottom: 20px;
+        }
+        img {
+            float: left;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .edify {
+            clear: left;
+            padding: -30%;
+        }
+       button{
+        width: 500px;
+        height:90px ;
+       }
+        .submit {
+            border: 2px solid black;
+            background-color: #007bff;
+            color: white;
+            font-size: larger;
+            
+        }
+        .submit:hover {
+            background-color: #0056b3;
+            
+        }
+        a{
+            float:right;
+            margin-right: 3%;
+        }
+        .headtag{
+            float:right;
+        }
+        .tag{
+            margin-right: 2%;
+            float:right;
+        }
+        .tag1{
+            margin-right: 0.5%;
+            float:right;
+        }
+    </style>
+    <script>
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+   
+    <div>
+        <img src="/icon2.png" alt="" height="0%" width="15%" class="img1"> <br>
+       <a href="/user/logout" ><img src="/logout.png"  class="headtag"></a>
+      <h3 class="tag" ><%= username %>  </h3></div> <br>
+      <img  class="tag1" src="/emp.webp" alt="loading"  height="20px"width="30px"> <br>
+    
+ <br> <br><h1  class="edify" align="center">EDIFY ENGINEERING SOLUTION</h1>
+ <br> <br> <br><br>
+    <div class="main" style="padding-top: 3%;">
+        <h2 align="center">USER PORTAL</h2>
+        <br> <br> <br>
+        <div align="center">
+            <button class="submit" onclick="navigateTo('/user/prform')"><img src="/cart.png"  alt="loading" width="50px" height="50px" style="padding-left: 2%;"><br>New Purchase Requisition <br></button> <br> <br>
+            <button class="submit" onclick="navigateTo('/user/viewpr')"><img src="/draft.png"  alt="loading" width="50px" height="50px" style="padding-left: 2%;"><br> Purchase Requisition Draft <br></button> <br> <br> 
+             <button class="submit" onclick="navigateTo('/user/status')"><img src="/emp.png"  alt="loading" width="50px" height="50px" style="padding-left: 2%;"><br>New Purchase Status <br></button> 
+           
+             
+        </div> <br> <br>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR Details</title>
+    <link rel="icon" href="/icon.jpg">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b8e7f9;
+            margin: 0;
+        }
+        .main {
+            padding: 20px;
+            background-color: #ececec;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(190, 156, 18, 0.2);
+            max-width: 100%; /* Ensures it's responsive */
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            text-align: center;
+            padding: 5px;
+        }
+        .submit, button {
+            background-color: #094af1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: auto;
+        }
+        .submit:hover, button:hover {
+            background-color: #2f4aa8;
+        }
+        iframe {
+            width: 70%;
+            height: 500px;
+        }
+        .goback {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+        .headtag, .tag, .tag1 {
+            float: right;
+        }
+        .tag {
+            margin-right: 2%;
+        }
+        .tag1 {
+            margin-right: 0.5%;
+        }
+        .no-border-table input[type="text"], .no-border-table input[type="number"], .no-border-table input[type="date"] {
+            width: 40%;
+            box-sizing: border-box;
+            padding: 1px;
+        }
+        .no-border-table, .no-border-table th, .no-border-table td { border: none; }
+        /* Modal styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function goBack() {
+            window.location.href = '/superadmin/status';
+        }
+        // Push a new state to the history stack
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function(event) {
+            // Redirect to the logout endpoint or any other desired page
+            window.location.href = '/superadmin/logout';
+        });
+        // Optional: Prevent default action for backspace key to avoid navigating back
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Backspace' && event.target.nodeName !== 'INPUT' && event.target.nodeName !== 'TEXTAREA') {
+                event.preventDefault();
+            }
+        });
+        
+        function viewPDF(filename) {
+            const modal = document.getElementById('pdfModal');
+            const modalContent = document.getElementById('pdfModalContent');
+            modal.style.display = 'block';
+            modalContent.src = `/uploads/${filename}`;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('pdfModal');
+            modal.style.display = 'none';
+        }
+
+        // Close the modal if the user clicks outside of the modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('pdfModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <img src="/icon2.png" alt="" height="0%" width="15%" class="img1"> <br>
+        <a href="/superadmin/logout"><img src="/logout.png" class="headtag"></a>
+        <h3 class="tag"><%= username %></h3>
+    </div>
+    <br>
+    <img class="tag1" src="/emp.webp" alt="loading" height="20px" width="30px">
+    <br>
+    <h1 class="edify" align="center">EDIFY ENGINEERING SOLUTION</h1>
+    <br>
+    <div class="main">
+        <h2>Approval Form</h2>
+        <form id="purchaseForm" action="/superadmin/submit1/<%= prDetails.Requisition %>" method="post">
+            <table class="no-border-table">
+                <tr>
+                    <td><label for="Requisition">Requisition #:</label></td>
+                    <td><input type="text" name="Requisition" required value="<%= prDetails.Requisition %>" disabled></td>
+                    <td><label for="date">Date:</label></td>
+                    <td><input type="date" name="date" required value="<%= prDetails.date %>" disabled></td>
+                </tr>
+                <tr>
+                    <td><label for="Customer">Customer Name:</label></td>
+                    <td><input type="text" name="Customer" required value="<%= prDetails.Customer %>" disabled></td>
+                    <td><label for="Requisitor">Requisitor:</label></td>
+                    <td><input type="text" name="Requisitor" required value="<%= prDetails.Requisitor %>" disabled></td>
+                </tr>
+                <tr>
+                    <td><label for="Pro_id">Project Id:</label></td>
+                    <td><input type="text" name="Pro_id" required value="<%= prDetails.Pro_id %>" disabled></td>
+                </tr>
+            </table>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Part No</th>
+                        <th>Description</th>
+                        <th>Manufacture No</th>
+                        <th>Supplier</th>
+                        <th>Qty</th>
+                        <th>Need by Date</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                        <th>Quote</th>
+                        <th>Approval</th>
+                        <th>Status</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% descriptions.forEach((entry, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= prDetails.Part_No[index] %></td>
+                        <td><%= prDetails.description[index] %></td>
+                        <td><%= prDetails.manufacture[index] %></td>
+                        <td><%= prDetails.supplier[index] %></td>
+                        <td><%= prDetails.Qty[index] %></td>
+                        <td><%= prDetails.Need_by_date[index] %></td>
+                        <td><%= prDetails.rate[index] %></td>
+                        <td><%= prDetails.total[index] %></td>
+                        <td>
+                            <% if (prDetails.files && prDetails.files[index] && prDetails.files[index] != '') { %>
+                                <a href="javascript:void(0);" onclick="viewPDF('<%= prDetails.files[index].filename %>')">View</a>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </td>
+                        <td>
+                            <button type="button" class="approveBtn" style="margin:2px; padding: 8px; background-color: #10F24F; color: black; font-size:10px;">Approve</button>
+                            <button type="button" class="reviseBtn" style="margin:2px; padding: 10px; background-color: yellow;color: black; font-size:10px;">Revise</button>
+                            <button type="button" class="rejectBtn" style="margin:2px; padding: 10px; background-color: red;color: black; font-size:10px;">Reject</button>
+                        </td>
+                        <td><img src="/approve.png" alt="status" class="statusImage" style="width: 20px; height: 20px;"></td>
+                        <td>
+                            <textarea name="remark[]" rows="2" cols="30"></textarea>
+                        </td>
+                        <td>
+                            <input type="hidden" name="status[]" class="statusInput" value="Approved">
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            <button type="button" id="exportCsv">Export CSV</button>
+            <div style="float: right; margin-right: 20%;">Grand Total:
+                <input type="text" id="grandTotal" value="<%= prDetails.grandtotal %>" placeholder="Grand Total" disabled>
+            </div>
+            <br><br><br><br>
+            <input type="submit" value="Submit" class="submit" style="float: right;margin-right: 20%;">
+        </form>
+        <br><br><br>
+        <img src="/goback.png" alt="loading" width="3%" height="5%" class="goback" onclick="goBack()">
+    </div>
+<br><br>
+    <!-- Modal HTML -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <iframe id="pdfModalContent" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
+   <script>
+    $(document).ready(function() {
+        // Event listener for the "Approve All" button
+        $("#approveAllBtn").click(function() {
+            $("#dataTable tbody tr").each(function() {
+                $(this).find(".statusInput").val("Approved");
+            });
+        });
+
+        // Event listener for the form submission
+        $("#purchaseForm").submit(function() {
+            // Log status values to verify
+            console.log("Status values:", $("#dataTable .statusInput").map(function() {
+                return $(this).val();
+            }).get());
+        });
+
+        // Function to handle the status image change
+        function changeStatusImage(row, status) {
+            let imageUrl = "";
+            switch (status) {
+                case "approve":
+                    imageUrl = "/approve.png";
+                    break;
+                case "revise":
+                    imageUrl = "/revise.png";
+                    break;
+                case "reject":
+                    imageUrl = "/reject.png";
+                    break;
+                default:
+                    imageUrl = "/approve.png";
+            }
+            row.find(".statusImage").attr("src", imageUrl);
+        }
+
+        // Event listeners for individual approval buttons
+        $("#dataTable").on("click", ".approveBtn", function() {
+            let row = $(this).closest("tr");
+            changeStatusImage(row, "approve");
+            row.find(".statusInput").val("Approved");
+        });
+
+        $("#dataTable").on("click", ".reviseBtn", function() {
+            let row = $(this).closest("tr");
+            changeStatusImage(row, "revise");
+            row.find(".statusInput").val("Revise");
+        });
+
+        $("#dataTable").on("click", ".rejectBtn", function() {
+            let row = $(this).closest("tr");
+            changeStatusImage(row, "reject");
+            row.find(".statusInput").val("Reject");
+        });
+
+        // CSV export functionality
+        $("#exportCsv").click(function() {
+            let csv = [];
+            const rows = $("#dataTable tbody tr");
+
+            const headers = $("#dataTable thead th").map(function() {
+                return $(this).text().trim();
+            }).get();
+            headers.pop();
+            csv.push(headers.join(","));
+
+            rows.each(function() {
+                let rowData = [];
+                $(this).find("td:not(:last-child)").each(function() {
+                    if ($(this).find("input").length > 0) {
+                        rowData.push($(this).find("input").val());
+                    } else {
+                        rowData.push($(this).text());
+                    }
+                });
+                csv.push(rowData.join(","));
+            });
+
+            downloadCSV(csv.join("\n"), 'purchase_order.csv');
+        });
+
+        function downloadCSV(csv, filename) {
+            let csvFile = new Blob([csv], { type: 'text/csv' });
+            let downloadLink = document.createElement('a');
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
+    });
+</script>
+
+</body>
+</html>

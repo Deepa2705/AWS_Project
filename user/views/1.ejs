@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user Portal</title>
+    <link rel="icon" href="/icon.jpg">
+    <style>
+        .goback {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b8e7f9;
+            margin: 0;
+            padding: 0;
+        }
+        .main {
+            margin: auto;
+            padding: 2%;
+            background-color: #ececec;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(11, 1, 1, 0.2);
+            width: 90%;
+        }
+        .main h2 {
+            color: #3f65c7;
+            margin-bottom: 20px;
+        }
+        img {
+            float: left;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+        }
+        .submit {
+            width: 100%;
+            height: 40px;
+            border: 2px solid black;
+            background-color: #3F4BBA;
+            color: white;
+        }
+        .submit:hover {
+            background-color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            margin-right: 3%;
+        }
+        .headtag {
+            float: right;
+        }
+        .tag {
+            margin-right: 2%;
+            float: right;
+        }
+        .tag1 {
+            margin-right: 0.5%;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img src="/icon2.png" alt="" height="0%" width="15%" class="img1"> <br>
+        <a href="/user/logout"><img src="/logout.png" class="headtag"></a>
+        <h3 class="tag"><%= username %></h3>
+    </div>
+    <img class="tag1" src="/emp.webp" alt="loading" height="20px" width="30px"><br>
+    <br><br>
+    <h1 class="edify" align="center">EDIFY ENGINEERING SOLUTION</h1>
+    <br><br><br><br>
+
+    <div class="main">
+        <h2 align="center">STATUS PORTAL</h2>
+        <br>
+        <div style="float: right;">
+            <img src="/green.png" alt="green" style="float: right;">Complete <br><br>
+            <img src="/yellow.png" alt="yellow" style="float: right;"> In Progress<br><br>
+            <img src="/grey.png" alt="gray" style="float: right;">Not Complete <br><br>
+            <img src="/orange.png" alt="orange" style="float: right;"> Revise <br><br>
+            <img src="/red.png" alt="red" style="float: right;">Overdue <br><br>
+        </div>
+        <br><br><br>
+        <div align="center">
+            <!-- Filter Dropdowns -->
+            <div>
+                <label for="fromDate">From:</label>
+                <input type="date" id="fromDate" onchange="filterTable()">
+
+                <label for="toDate">To:</label>
+                <input type="date" id="toDate" onchange="filterTable()">
+                <br> <br> <br>
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter" onchange="filterTable()">
+                    <option value="">All</option>
+                    <option value="Open">Open</option>
+                    <option value="floatRFQ">Float RFQ</option>
+                    <option value="submitquote">Submit Quote</option>
+                    <option value="close">Close</option>
+
+                    <option value="Revise">Revise</option>
+                </select>
+
+                <label for="requisitorFilter">Requisitor:</label>
+                <select id="requisitorFilter" onchange="filterTable()">
+                    <option value="">All</option>
+                    <% const requisitors = new Set(); %>
+                    <% statusEntries.forEach(entry => { requisitors.add(entry.Requisitor); }); %>
+                    <% [...requisitors].forEach(requisitor => { %>
+                        <option value="<%= requisitor %>"><%= requisitor %></option>
+                    <% }); %>
+                </select>
+
+                <label for="customerNameFilter">Customer Name:</label>
+                <select id="customerNameFilter" onchange="filterTable()">
+                    <option value="">All</option>
+                    <% const customers = new Set(); %>
+                    <% statusEntries.forEach(entry => { customers.add(entry.Customer); }); %>
+                    <% [...customers].forEach(customer => { %>
+                        <option value="<%= customer %>"><%= customer %></option>
+                    <% }); %>
+                </select>
+
+                <label for="projectIdFilter">Project ID:</label>
+                <input type="text" id="projectIdFilter" oninput="filterTable()">
+
+                <label for="requisitionFilter">Requisition #:</label>
+                <input type="text" id="requisitionFilter" oninput="filterTable()">
+            </div>
+            <br><br>
+            <table id="statusTable">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Sl No</th>
+                        <th rowspan="2">Issue Date</th>
+                        <th rowspan="2">Updated On</th>
+                        <th rowspan="2">Requisition#</th>
+                        <th rowspan="2">Customer Name</th>
+                        <th rowspan="2">Project Id</th>
+                        <th rowspan="2">Requisitor</th>
+                        <th colspan="4">Status</th>
+                        <th rowspan="2">Action</th>
+                    </tr>
+                    <tr>
+                        <td>Open</td>
+                        <td>Float RFQ</td>
+                        <td>Submit Quote</td>
+                        <td>Close</td>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <% statusEntries.forEach((entry, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= entry.date %></td>
+                        <td><%= entry.updatedOn %></td>
+                        <td><%= entry.Requisition %></td>
+                        <td><%= entry.Customer %></td>
+                        <td><%= entry.Pro_id %></td>
+                        <td><%= entry.Requisitor %></td>
+                        <td hidden><%= entry.Status %></td>
+                        <td style="padding-left: 2%;"><img src="/green.png" alt="Open"></td>
+                
+                        <% if (entry.Status === 'open') { %>
+                            <td style="padding-left: 3%;"><img src="/yellow.png" alt="Open"></td>
+                            <td style="padding-left: 5%;"><img src="/grey.png" alt="Open"></td>
+                            <% if (entry.status === 'overdue') { %>
+                                <td style="padding-left: 2%;"><img src="/red.png" alt="Open"></td>
+                            <% } else { %>
+                                <td style="padding-left: 2%;"><img src="/grey.png" alt="Open"></td>
+                            <% } %>
+                        <% } else if (entry.Status === 'floatRFQ') { %>
+                            <td style="padding-left: 3%;"><img src="/green.png" alt="Open"></td>
+                            <td style="padding-left: 5%;"><img src="/yellow.png" alt="Open"></td>
+                            <% if (entry.status === 'overdue') { %>
+                                <td style="padding-left: 2%;"><img src="/red.png" alt="Open"></td>
+                            <% } else { %>
+                                <td style="padding-left: 2%;"><img src="/grey.png" alt="Open"></td>
+                            <% } %>
+                        <% } else if (entry.Status === 'submitquote') { %>
+                            <td style="padding-left: 3%;"><img src="/green.png" alt="Open"></td>
+                            <td style="padding-left: 5%;"><img src="/green.png" alt="Open"></td>
+                            <% if (entry.status === 'overdue') { %>
+                                <td style="padding-left: 2%;"><img src="/red.png" alt="Open"></td>
+                            <% } else { %>
+                                <td style="padding-left: 2%;"><img src="/yellow.png" alt="Open"></td>
+                            <% } %>
+                        <% } else if (entry.Status === 'close') { %>
+                            <td style="padding-left: 3%;"><img src="/green.png" alt="Open"></td>
+                            <td style="padding-left: 5%;"><img src="/green.png" alt="Open"></td>
+                            <td style="padding-left: 2%;"><img src="/green.png" alt="Open"></td>
+                        <% } else if (entry.Status === 'Revise') { %>
+                            <td style="padding-left: 3%;"><img src="/green.png" alt="Open"></td>
+                            <td style="padding-left: 5%;"><img src="/orange.png" alt="Open"></td>
+                            <% if (entry.status === 'overdue') { %>
+                                <td style="padding-left: 2%;"><img src="/red.png" alt="Open"></td>
+                            <% } else { %>
+                                <td style="padding-left: 2%;"><img src="/grey.png" alt="Open"></td>
+                            <% } %>
+                        <% } %>
+                
+                        <td>
+                            <button class="submit" onclick="redirectBasedOnStatus('<%= entry.Status %>', '<%= entry.Requisition %>')">View</button>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+                
+                
+            </table>
+        </div>
+        <br><br>
+    </div>
+    <img src="/goback.png" alt="loading" width="3%" height="5%" class="goback" onclick="goBack()">
+
+    <script>
+        function goBack() {
+            window.location.href='/user';
+        }
+
+        function redirectBasedOnStatus(status, reqe) {
+           
+                window.location.href = `/user/check/${reqe}`;
+            
+        }
+
+        </script>
+        <script>
+    function filterTable() {
+        var fromDate = document.getElementById("fromDate").value;
+        var toDate = document.getElementById("toDate").value;
+        var statusFilter = document.getElementById("statusFilter").value.toUpperCase();
+        var requisitorFilter = document.getElementById("requisitorFilter").value.toUpperCase();
+        var customerNameFilter = document.getElementById("customerNameFilter").value.toUpperCase();
+        var projectIdFilter = document.getElementById("projectIdFilter").value.toUpperCase();
+        var requisitionFilter = document.getElementById("requisitionFilter").value.toUpperCase();
+
+        var table = document.getElementById("statusTable");
+        var tr = table.getElementsByTagName("tr");
+        var serialNumber = 1;
+
+        for (var i = 1; i < tr.length; i++) {
+            var tdDate = tr[i].getElementsByTagName("td")[1];
+            var tdStatus = tr[i].getElementsByTagName("td")[7];
+            var tdRequisitor = tr[i].getElementsByTagName("td")[6];
+            var tdCustomerName = tr[i].getElementsByTagName("td")[4];
+            var tdProjectId = tr[i].getElementsByTagName("td")[5];
+            var tdRequisition = tr[i].getElementsByTagName("td")[3];
+
+            if (tdDate && tdStatus && tdRequisitor && tdCustomerName && tdProjectId && tdRequisition) {
+                var dateValue = tdDate.textContent || tdDate.innerText;
+                var statusValue = tdStatus.textContent || tdStatus.innerText;
+                var requisitorValue = tdRequisitor.textContent || tdRequisitor.innerText;
+                var customerNameValue = tdCustomerName.textContent || tdCustomerName.innerText;
+                var projectIdValue = tdProjectId.textContent || tdProjectId.innerText;
+                var requisitionValue = tdRequisition.textContent || tdRequisition.innerText;
+
+                var showRow = true;
+
+                if (fromDate && dateValue < fromDate) {
+                    showRow = false;
+                }
+                if (toDate && dateValue > toDate) {
+                    showRow = false;
+                }
+                if (statusFilter && statusValue.toUpperCase() !== statusFilter) {
+                    showRow = false;
+                }
+                if (requisitorFilter && requisitorValue.toUpperCase() !== requisitorFilter) {
+                    showRow = false;
+                }
+                if (customerNameFilter && customerNameValue.toUpperCase() !== customerNameFilter) {
+                    showRow = false;
+                }
+                if (projectIdFilter && projectIdValue.toUpperCase() !== projectIdFilter) {
+                    showRow = false;
+                }
+                if (requisitionFilter && requisitionValue.toUpperCase() !== requisitionFilter) {
+                    showRow = false;
+                }
+
+                if (showRow) {
+                    tr[i].style.display = "";
+                    tr[i].getElementsByTagName("td")[0].innerText = serialNumber++;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+
+</body>
+</html>
