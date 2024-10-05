@@ -18,7 +18,7 @@ const bcrypt = require('bcryptjs');
 //     console.error("Error connecting to MongoDB:", err);
 // });
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const uri = process.env.MONGO_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
