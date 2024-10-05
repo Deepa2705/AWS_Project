@@ -4,7 +4,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 
 // Connect to MongoDB
 // mongoose.connect('mongodb://localhost:27017/edify', {
