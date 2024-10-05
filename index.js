@@ -7,14 +7,22 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/edify', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log("Connected to MongoDB");
-}).catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-});
+// mongoose.connect('mongodb://localhost:27017/edify', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// }).then(() => {
+//     console.log("Connected to MongoDB");
+// }).catch((err) => {
+//     console.error("Error connecting to MongoDB:", err);
+// });
+
+const mongoose = require('mongoose');
+
+const uri = process.env.MONGO_URI;
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB Atlas!'))
+  .catch(err => console.error('Connection error', err));
+
 
 // Define User schema and model
 const User = mongoose.model('User', {
