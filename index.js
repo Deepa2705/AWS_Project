@@ -4,31 +4,13 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-// const bcrypt = require('bcrypt');
 const bcrypt = require('bcryptjs');
-
-
-// Connect to MongoDB
-// mongoose.connect('mongodb://localhost:27017/edify', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// }).then(() => {
-//     console.log("Connected to MongoDB");
-// }).catch((err) => {
-//     console.error("Error connecting to MongoDB:", err);
-// });
+const connectDB = require('./db'); // Import the connectDB function
 
 const MONGO_URI = process.env.MONGO_URI; // Ensure your connection string is correctly set here
 
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(8080, () => {
-      console.log('Server is running on port 8080');
-    });
-  })
-  .catch(err => console.error('MongoDB connection error:', err));
-
+// Connect to MongoDB
+connectDB(MONGO_URI);
 
 // Define User schema and model
 const User = mongoose.model('User', {
@@ -59,14 +41,15 @@ app.set('views', [
     path.join(__dirname, 'superadmin', 'views')
 ]);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
-app.get('/login', function (req, res) {
+app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
-app.get('/signup', function (req, res) {
+app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, 'signup.html'));
 });
 
