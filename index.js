@@ -18,12 +18,16 @@ const bcrypt = require('bcryptjs');
 //     console.error("Error connecting to MongoDB:", err);
 // });
 
-// const mongoose = require('mongoose');
+const MONGO_URI = process.env.MONGO_URI; // Ensure your connection string is correctly set here
 
-const uri = process.env.MONGO_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB Atlas!'))
-  .catch(err => console.error('Connection error', err));
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(8080, () => {
+      console.log('Server is running on port 8080');
+    });
+  })
+  .catch(err => console.error('MongoDB connection error:', err));
 
 
 // Define User schema and model
